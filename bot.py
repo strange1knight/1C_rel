@@ -17,7 +17,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN not found in .env")
 
-# Настройка прокси для Telebot (если нужен)
+# Настройка прокси для Telebot
 TOR_PROXY = os.getenv("TOR_PROXY", "socks5://127.0.0.1:9150")
 try:
     import telebot.apihelper
@@ -81,7 +81,7 @@ def check_auth():
         print(f"Auth check error: {e}")
         return False
 
-# ================== ЛОГИРОВАНИЕ ДИАЛОГОВ ==================
+#Логирование
 class UserLog:
     _loggers = {}
     @classmethod
@@ -96,7 +96,7 @@ class UserLog:
             cls._loggers[user_id] = logger
         return cls._loggers[user_id]
 
-# ================== КОНФИГУРАЦИЯ ==================
+#Конфа
 PRODUCTS = {
     "bp": {
         "name": "Бухгалтерия предприятия ПРОФ, редакция 3.0",
@@ -200,14 +200,14 @@ def calculate_update_path(product_key, current_version):
     if not releases:
         return {"error": "Не удалось получить список релизов"}
     
-    # Получаем все версии в порядке от новых к старым (так как на сайте они отсортированы)
+    # Получаем все версии в порядке от новых к старым
     all_versions = [r["version"] for r in releases]
     latest_version = all_versions[0]
     
     # Преобразуем текущую версию в кортеж для сравнения
     current_tuple = version_to_tuple(current_version)
     
-    # Находим индекс текущей версии в списке (или ближайшей младшей)
+    # Находим индекс текущей версии в списке
     current_index = None
     for i, ver in enumerate(all_versions):
         if version_to_tuple(ver) == current_tuple:
@@ -280,9 +280,9 @@ def get_api_demo_data():
         ]
     }
 
-# ================== ОБРАБОТЧИКИ КОМАНД ==================
+# Обработчики
 
-# КОМАНДА 1: /start и /help - Приветствие и список команд
+# /start и /help - Приветствие и список команд
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     user_id = message.from_user.id
@@ -321,13 +321,13 @@ def send_welcome(message):
 Примеры:
 /check bp
 /check zup
-/update bp 3.0.150.25
-/update zup 3.1.20.10"""
+/update bp 3.0.197.22
+/update zup 3.1.37.72"""
     
     bot.reply_to(message, help_text)
     logger.info(f"Бот отправил справку пользователю {username}")
 
-# КОМАНДА 2: /releases - Получение всех релизов (скрапинг HTML)
+# /releases - Получение всех релизов (скрапинг HTML)
 @bot.message_handler(commands=['releases'])
 def all_releases(message):
     user_id = message.from_user.id
@@ -369,7 +369,7 @@ def all_releases(message):
     bot.edit_message_text(response, chat_id=message.chat.id, message_id=status_msg.message_id)
     logger.info(f"Бот отправил результаты релизов пользователю {username}")
 
-# КОМАНДА 3: /check - Проверка конкретной конфигурации (скрапинг HTML)
+# /check - Проверка конкретной конфы
 @bot.message_handler(commands=['check'])
 def check_release(message):
     user_id = message.from_user.id
@@ -411,7 +411,7 @@ def check_release(message):
         response += f"Дата выпуска: {release['date']}\n"
         response += f"Минимальная версия платформы: {release['min_platform']}\n\n"
         
-        # Добавляем информацию о версиях для обновления (если есть и не слишком длинная)
+        # Добавляем информацию о версиях для обновления
         if release.get('update_versions') and release['update_versions'] != "Не указаны" and release['update_versions']:
             update_versions = release['update_versions']
             if len(update_versions) > 100:
@@ -426,7 +426,7 @@ def check_release(message):
     bot.edit_message_text(response, chat_id=message.chat.id, message_id=status_msg.message_id)
     logger.info(f"Бот отправил информацию о релизе {product_key} пользователю {username}")
 
-# КОМАНДА 4: /update - Калькулятор обновлений
+#/update - Калькулятор обновлений
 @bot.message_handler(commands=['update'])
 def update_calculator(message):
     user_id = message.from_user.id
@@ -516,7 +516,7 @@ def update_calculator(message):
     bot.edit_message_text(response, chat_id=message.chat.id, message_id=status_msg.message_id)
     logger.info(f"Бот отправил калькуляцию обновлений пользователю {username}: {update_info.get('total_updates', 0)} обновлений")
 
-# КОМАНДА 5: /apidata - Получение данных через HTTP API (демонстрация)
+# /apidata - Получение данных через HTTP API (демонстрация)
 @bot.message_handler(commands=['apidata'])
 def api_demo(message):
     user_id = message.from_user.id
@@ -540,7 +540,7 @@ def api_demo(message):
     bot.reply_to(message, response)
     logger.info(f"Бот отправил демонстрационные API данные пользователю {username}")
 
-# КОМАНДА 6: /history - Показать историю диалога (логирование в файл)
+# /history - Показать историю диалога (логирование в файл)
 @bot.message_handler(commands=['history'])
 def show_history(message):
     user_id = message.from_user.id
@@ -585,7 +585,7 @@ def unknown(message):
     response = "Неизвестная команда. Используйте /help для просмотра доступных команд."
     bot.reply_to(message, response)
 
-# ================== ЗАПУСК БОТА ==================
+#Запуск
 if __name__ == '__main__':
     print("\n" + "=" * 60)
     print("БОТ ДЛЯ ПРОВЕРКИ РЕЛИЗОВ 1С")
