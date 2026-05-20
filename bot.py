@@ -290,7 +290,7 @@ def send_welcome(message):
     logger = UserLog.get_logger(user_id)
     logger.info(f"Пользователь {username} выполнил команду: {message.text}")
     
-    help_text = """=== БОТ ДЛЯ ПРОВЕРКИ РЕЛИЗОВ 1С ===
+    help_text = """Бот 1С
 
 Доступные команды:
 
@@ -361,7 +361,7 @@ def all_releases(message):
             results.append(f"Конфигурация: {product['name']} - данные не получены\n")
         time.sleep(0.5)
     
-    response = "=== РЕЗУЛЬТАТЫ ПРОВЕРКИ РЕЛИЗОВ ===\n\n"
+    response = "Результат проверки релизов\n\n"
     response += "\n".join(results)
     response += "\n---\nМетод получения данных: скрапинг HTML с авторизацией через cookies"
     response += "\nИсточник: https://releases.1c.ru"
@@ -406,7 +406,7 @@ def check_release(message):
     release = get_latest_release(product_key)
     
     if release:
-        response = f"=== КОНФИГУРАЦИЯ: {product['name']} ===\n\n"
+        response = f"Конфигурация: {product['name']}\n\n"
         response += f"Актуальная версия: {release['version']}\n"
         response += f"Дата выпуска: {release['date']}\n"
         response += f"Минимальная версия платформы: {release['min_platform']}\n\n"
@@ -493,14 +493,14 @@ def update_calculator(message):
         return
     
     if update_info.get("is_latest"):
-        response = f"=== КАЛЬКУЛЯТОР ОБНОВЛЕНИЙ ===\n\n"
+        response = f"Калькулятор обновлений\n\n"
         response += f"Конфигурация: {product['name']}\n"
         response += f"Ваша версия: {current_version}\n"
         response += f"Актуальная версия: {update_info['latest_version']}\n\n"
         response += f"Результат: {update_info['message']}\n\n"
         response += "---\nМетод получения данных: анализ списка релизов"
     else:
-        response = f"=== КАЛЬКУЛЯТОР ОБНОВЛЕНИЙ ===\n\n"
+        response = f"Калькулятор обновлений\n\n"
         response += f"Конфигурация: {product['name']}\n"
         response += f"Ваша версия: {current_version}\n"
         response += f"Актуальная версия: {update_info['latest_version']}\n\n"
@@ -526,7 +526,7 @@ def api_demo(message):
     
     api_data = get_api_demo_data()
     
-    response = "=== ОТВЕТ HTTP API ===\n\n"
+    response = "Ответ HTTP API\n\n"
     response += f"Статус: {api_data['status']}\n"
     response += f"Источник: {api_data['source']}\n"
     response += f"Время запроса: {api_data['timestamp']}\n\n"
@@ -556,7 +556,7 @@ def show_history(message):
             last_lines = lines[-30:] if len(lines) > 30 else lines
             history = ''.join(last_lines)
         
-        response = f"=== ИСТОРИЯ ДИАЛОГА ===\n\n"
+        response = f"История диалога\n\n"
         response += f"Файл: {user_id}.log\n"
         response += f"Всего записей: {len(lines)}\n"
         response += f"Показано последних: {len(last_lines)}\n\n"
@@ -587,9 +587,7 @@ def unknown(message):
 
 #Запуск
 if __name__ == '__main__':
-    print("\n" + "=" * 60)
-    print("БОТ ДЛЯ ПРОВЕРКИ РЕЛИЗОВ 1С")
-    print("=" * 60)
+    print("Бот релизов 1С \n")
     
     # Загрузка cookies
     if load_cookies_from_file():
@@ -597,13 +595,13 @@ if __name__ == '__main__':
         if check_auth():
             print("Авторизация на портале 1С подтверждена")
         else:
-            print("ВНИМАНИЕ: Cookies могли устареть. Обновите cookies.json")
+            print("Внимание: Cookies могли устареть. Обновите cookies.json")
     else:
-        print("ОШИБКА: Не удалось загрузить файл cookies.json")
+        print("Ошибка: Не удалось загрузить файл cookies.json")
         print("Создайте файл cookies.json в папке с ботом")
     
     print("\n" + "=" * 60)
-    print("БОТ ЗАПУЩЕН")
+    print("Бот запущен")
     print("Доступные команды:")
     print("  /start, /help - справка")
     print("  /releases - все релизы")
